@@ -75,15 +75,17 @@ impl Exec for Builder {
 
 #[derive(Debug, ValueEnum, PartialEq, Eq, Clone, Copy)]
 pub enum BuildingType {
-    StaticSiteGeneration,
-    ServerSideRendering,
+    /// Static Site Generation
+    Ssg,
+    /// Server Side Rendering
+    Ssr,
 }
 
 impl From<BuildingType> for server::BuildingType {
     fn from(val: BuildingType) -> Self {
         match val {
-            BuildingType::StaticSiteGeneration => server::BuildingType::StaticSiteGeneration,
-            BuildingType::ServerSideRendering => server::BuildingType::ServerSideRendering,
+            BuildingType::Ssg => server::BuildingType::StaticSiteGeneration,
+            BuildingType::Ssr => server::BuildingType::ServerSideRendering,
         }
     }
 }
@@ -91,8 +93,8 @@ impl From<BuildingType> for server::BuildingType {
 impl Display for BuildingType {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.write_str(match *self {
-            Self::StaticSiteGeneration => "ssg",
-            Self::ServerSideRendering => "ssr",
+            Self::Ssg => "ssg",
+            Self::Ssr => "ssr",
         })
     }
 }
@@ -101,8 +103,8 @@ impl FromStr for BuildingType {
     type Err = String;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_lowercase().as_str() {
-            "ssr" | "server-side rendering" => Ok(BuildingType::StaticSiteGeneration),
-            "ssg" | "static-site generation" => Ok(BuildingType::ServerSideRendering),
+            "ssr" | "server-side rendering" => Ok(BuildingType::Ssg),
+            "ssg" | "static-site generation" => Ok(BuildingType::Ssr),
             _ => Err("unsupported option.".to_string()),
         }
     }
