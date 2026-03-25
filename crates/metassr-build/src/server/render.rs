@@ -4,7 +4,7 @@ use crate::{
 };
 use anyhow::Result;
 use dunce;
-use metassr_utils::rand::Rand;
+use metassr_utils::{js_path::to_js_path, rand::Rand};
 use std::{ffi::OsStr, path::PathBuf};
 
 const RENDER_FILE_TEMPLATE: &str = include_str!("../scripts/render.js.template");
@@ -39,8 +39,8 @@ impl Generate for ServerRender {
         Ok((
             func_id,
             RENDER_FILE_TEMPLATE
-                .replace(APP_PATH_TAG, app_path.to_str().unwrap())
-                .replace(PAGE_PATH_TAG, page_path.to_str().unwrap())
+                .replace(APP_PATH_TAG, &to_js_path(&app_path))
+                .replace(PAGE_PATH_TAG, &to_js_path(&page_path))
                 .replace(FUNC_ID_TAG, &func_id.to_string()),
         ))
     }
