@@ -3,6 +3,7 @@ use crate::{
     traits::Generate,
 };
 use anyhow::Result;
+use dunce;
 use metassr_utils::rand::Rand;
 use std::{ffi::OsStr, path::PathBuf};
 
@@ -29,8 +30,8 @@ impl Generate for ServerRender {
     type Output = (i64, String);
     fn generate(&self) -> Result<Self::Output> {
         let func_id = Rand::new().val();
-        let mut app_path = self.app_path.canonicalize()?;
-        let mut page_path = self.page_path.canonicalize()?;
+        let mut app_path = dunce::canonicalize(&self.app_path)?;
+        let mut page_path = dunce::canonicalize(&self.page_path)?;
 
         app_path.set_extension("");
         page_path.set_extension("");

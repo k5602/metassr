@@ -3,6 +3,7 @@ use crate::{
     traits::Generate,
 };
 use anyhow::Result;
+use dunce;
 use std::{ffi::OsStr, path::PathBuf};
 
 const HYDRATED_FILE_TEMPLATE: &str = include_str!("../scripts/hydrate.js.template");
@@ -33,11 +34,11 @@ impl Generate for Hydrator {
         Ok(HYDRATED_FILE_TEMPLATE
             .replace(
                 APP_PATH_TAG,
-                self.app_path.canonicalize()?.to_str().unwrap(),
+                dunce::canonicalize(&self.app_path)?.to_str().unwrap(),
             )
             .replace(
                 PAGE_PATH_TAG,
-                self.page_path.canonicalize()?.to_str().unwrap(),
+                dunce::canonicalize(&self.page_path)?.to_str().unwrap(),
             )
             .replace(ROOT_ID_TAG, &self.root_id))
     }

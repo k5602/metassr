@@ -1,4 +1,5 @@
 use anyhow::{anyhow, Result};
+use dunce;
 use lazy_static::lazy_static;
 use metacall::{load, metacall_no_arg};
 use metassr_utils::{cache_dir::CacheDir, checker::CheckerState};
@@ -69,7 +70,7 @@ export function render_head() {{
 }}            
                 
                 "#,
-            self.path.canonicalize()?.display()
+            dunce::canonicalize(&self.path)?.display()
         );
         Ok(script)
     }
@@ -83,7 +84,7 @@ export function render_head() {{
             .to_str()
             .unwrap()
             .to_string();
-        let fullpath = path.canonicalize()?.to_str().unwrap().to_string();
+        let fullpath = dunce::canonicalize(&path)?.to_str().unwrap().to_string();
 
         Ok(HashMap::from([(name, fullpath)]))
     }

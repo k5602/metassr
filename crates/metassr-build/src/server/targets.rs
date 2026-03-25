@@ -4,6 +4,7 @@ use std::{
 };
 
 use anyhow::Result;
+use dunce;
 
 use metassr_fs_analyzer::src_dir::PagesEntriesType;
 use metassr_utils::cache_dir::CacheDir;
@@ -40,7 +41,11 @@ impl Targets {
                 name.set_extension("");
                 (
                     name.to_str().unwrap().to_string(),
-                    path.canonicalize().unwrap().to_str().unwrap().to_string(),
+                    dunce::canonicalize(path)
+                        .unwrap()
+                        .to_str()
+                        .unwrap()
+                        .to_string(),
                 )
             })
             .collect()
