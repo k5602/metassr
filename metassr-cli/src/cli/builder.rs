@@ -1,4 +1,4 @@
-use std::{fmt::Display, str::FromStr};
+use std::{fmt::Display, mem, str::FromStr};
 
 use super::traits::Exec;
 use anyhow::{anyhow, Result};
@@ -68,6 +68,12 @@ impl Exec for Builder {
             message = "Building is completed",
             time = format!("{}ms", instant.elapsed().as_millis())
         );
+
+        // Skip metacall_destroy() on drop. The node_loader shutdown hangs on macOS
+        // because rspack's native addon leaves libuv handles alive that prevent the
+        // event loop from draining. Since the build command exits immediately after
+        // this point, the OS reclaims all resources h4.
+        mem::forget(_metacall);
 
         Ok(())
     }
